@@ -8,8 +8,20 @@ Drives a beads epic through a fixed multi-agent pipeline, from tickets to open p
 The globally installed tool as a whole: the Orchestrator and the Shell.
 
 **Target repo**:
-The repository whose epic is being worked on. Orqadence is run from inside it; it scaffolds the repo's agent setup once, and the repo owns its conventions from then on.
+The repository whose epic is being worked on. Orqadence is run from inside it; the Setup wizard sets it up for agents once, and the repo owns its conventions from then on.
 _Avoid_: Project, host repo
+
+**Setup wizard**:
+What `orqa` opens in a folder not set up, empty or not, and what `orqa init` re-runs in a Target repo that is: the steps that set it up for Orqadence, its skills, Ticket labels and Extra reviews taken only from the Catalog. Re-run, it proposes additions and removals to what is installed, removes nothing without a yes, and lands its changes as a Settings pull request. Not built yet: `orqa init` on a repo whose settings are not committed still asks its line questions and offers every shipped Ticket label checked.
+_Avoid_: Init wizard, onboarding
+
+**Catalog**:
+The vetted list compiled into Orqadence that the Setup wizard picks from: the tools and their install commands per OS, the skill sources per kind of work and cloud provider, and the Ticket labels with their guidance and Extra review. The Setup wizard installs nothing outside it, so a new stack reaches users only through a release.
+_Avoid_: Registry, marketplace
+
+**Interview**:
+The Setup wizard's App session that asks about the stack and Orqadence's switches and writes the setup's picks, each question drawn by the Setup wizard as its own. It may suggest any language and libraries, but a skill, label or Extra review it names outside the Catalog is rejected.
+_Avoid_: Setup session, questionnaire
 
 **Stage skill**:
 A skill owned and shipped by Orqadence that holds the instructions for one Stage. Once installed for a Target repo, the installed copy is the one that runs and may be edited there.
@@ -24,7 +36,7 @@ A skill, third-party or Shipped, a Stage skill or Brainstorm skill runs for one 
 _Avoid_: Override, replacement, work skill
 
 **Shipped skill**:
-Any skill Orqadence ships and installs for a Target repo, committed with the repo's Orqadence settings: the Stage skills, the Brainstorm skills, plus orqa-create-pr, which the Fix Stage and the Release run, orqa-infra-review, orqa:infra's Extra review skill, orqa-address-pr-comments, the Address PR comments Stage's default Delegate skill, orqa-manual-work, which says how a session files Manual work, and orqa-code-graph, which Implement loads to find its way through the worktree's code graph. Like every skill Orqadence installs, fetched Delegate skills too, its name starts with orqa-, so none shares a name with a skill of the repo's or the user's own.
+Any skill Orqadence ships and installs for a Target repo, committed with the repo's Orqadence settings: the Stage skills, the Brainstorm skills, plus orqa-create-pr, which the Fix Stage runs, orqa-frontend-review, orqa-infra-review and orqa-db-review, the Extra review skills of orqa:frontend, orqa:infra and orqa:db, orqa-address-pr-comments, the Address PR comments Stage's default Delegate skill, orqa-manual-work, which says how a session files Manual work, and orqa-code-graph, which Implement loads to find its way through the worktree's code graph. Like every skill Orqadence installs, fetched Delegate skills too, its name starts with orqa-, so none shares a name with a skill of the repo's or the user's own.
 
 **Personal override**:
 One setting of the Target repo's Orqadence settings that one person keeps for themselves, read over the repo's committed value on their machine only. It never leaves the machine and is never reviewed, so it covers only what does not change the text a Stage runs: which App, model and effort a Stage uses, always the three together, and the run's caps and switches. Never a skill, a Delegate pick, a label or a secret. A Ticket's label still goes over it.
@@ -50,7 +62,7 @@ A run, an Epic run or a Ticket run, that was stopped before it ended, kept so it
 _Avoid_: Stopped run, history entry, paused epic
 
 **Ticket label**:
-A bd label `orqa:<name>` that the Target repo has configured, changing how its Ticket runs: the skills and guidance the Stages that write its code get, the App, model or effort of any Stage, the template its pull request is written from, and possibly an Extra review. A Ticket carries at most one Area label and any number of Modifier labels; labels that clash are put to the user before the Ticket goes on. Its pull request carries the same labels on GitHub, where `orqa init` and `/config` keep them.
+A bd label `orqa:<name>` that the Target repo has configured, changing how its Ticket runs: the skills and guidance the Stages that write its code get, the App, model or effort of any Stage, the template its pull request is written from, and possibly an Extra review. A Ticket carries at most one Area label and any number of Modifier labels; labels that clash are put to the user before the Ticket goes on. Its pull request carries the same labels on GitHub, where the Setup wizard and /config keep them.
 _Avoid_: Tag, kind
 
 **Area label**:
@@ -149,15 +161,15 @@ The Release's version pull request, a Settings pull request, a Ticket's whose Ti
 _Avoid_: Trivial PR, docs PR
 
 **Settings pull request**:
-The No-review pull request the Shell opens when the user agrees to commit what a /config save wrote to the Target repo: only those settings, put onto the default branch as it stands, never the checkout's other changes. One is open in a Target repo at a time, whoever opened it; a later one waits for it to merge or close. It belongs to no run: under Agent merge the Shell merges it, not the Orchestrator, and once it merges the checkout's matching uncommitted settings are dropped when no run is live, so a pull brings them back.
+The No-review pull request the Shell opens when the user agrees to commit what a /config save wrote to the Target repo, or a re-run of the Setup wizard lands its changes: only those settings, put onto the default branch as it stands, never the checkout's other changes. The Setup wizard's Apply opens one too on a repo that has history, with only the changes its own steps made, never one made between them. One is open in a Target repo at a time, whoever opened it; a later one waits for it to merge or close. It belongs to no run: under Agent merge the Shell merges it, not the Orchestrator, and once it merges the checkout's matching uncommitted settings are dropped when no run is live, so a pull brings them back.
 _Avoid_: Config PR, settings commit
 
 **Release**:
-The Stage that ends a run carrying the Release label, once every Ticket is merged. No session runs it: the Orchestrator itself, by the Release template, raises the version in each of the repo's version files, runs its lock command, adds a changelog entry when the repo keeps a changelog, and opens the version pull request. When that is merged, a Question asks whether to tag the new version; yes pushes the tag, and either answer ends the run. Under Agent merge the version pull request is merged and tagged without the Question. A repo that keeps its version only in tags gets no pull request, only the Question. It runs outside the Pipeline and belongs to the run, not to a Ticket.
+The step that ends a run carrying the Release label, once every Ticket is merged. It is no Stage and runs no session: the Orchestrator itself, by the Release template, raises the version in each of the repo's version files, runs its lock command, adds a changelog entry when the repo keeps a changelog, and opens the version pull request. When that is merged, a Question asks whether to tag the new version; yes pushes the tag, and either answer ends the run. Under Agent merge the version pull request is merged and tagged without the Question. A repo that keeps its version only in tags gets no pull request, only the Question. It runs outside the Pipeline and belongs to the run, not to a Ticket.
 _Avoid_: Version bump, bump, publish
 
 **Release template**:
-The `release` object of `.orqadence/config.json`, the repo's own and never a Personal override: the files the Target repo keeps its version in, each with the pattern that finds it, the command that refreshes its lockfile, its changelog's path, heading and entry, the tag's form and what an Epic run and a Ticket run each raise. `orqa init` detects it from the repo's files and never creates a changelog; /config's Release page edits it.
+The `release` object of `.orqadence/config.json`, the repo's own and never a Personal override: the files the Target repo keeps its version in, each with the pattern that finds it, the command that refreshes its lockfile, its changelog's path, heading and entry, the tag's form and what an Epic run and a Ticket run each raise. The Setup wizard detects it from the repo's files and writes it, never creating a changelog; /config's Release page edits it.
 _Avoid_: Release config, version settings
 
 **Moderator**:
