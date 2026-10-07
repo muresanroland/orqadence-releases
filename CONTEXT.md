@@ -12,7 +12,7 @@ The repository whose epic is being worked on. Orqadence is run from inside it; t
 _Avoid_: Project, host repo
 
 **Setup wizard**:
-What `orqa` opens in a folder not set up, empty or not, and what `orqa init` re-runs in a Target repo that is: the steps that set it up for Orqadence, its skills, Ticket labels and Extra reviews taken only from the Catalog. Re-run, it proposes additions and removals to what is installed, removes nothing without a yes, and lands its changes as a Settings pull request. Not built yet: `orqa init` on a repo whose settings are not committed still asks its line questions and offers every shipped Ticket label checked.
+What `orqa` opens in a folder not set up, empty or not, and what `orqa init` re-runs in a Target repo that is: the steps that set it up for Orqadence, its skills, Ticket labels and Extra reviews taken only from the Catalog. Re-run, it proposes additions and removals to what is installed, removes nothing without a yes, and lands its changes as a Settings pull request.
 _Avoid_: Init wizard, onboarding
 
 **Catalog**:
@@ -36,7 +36,7 @@ A skill, third-party or Shipped, a Stage skill or Brainstorm skill runs for one 
 _Avoid_: Override, replacement, work skill
 
 **Shipped skill**:
-Any skill Orqadence ships and installs for a Target repo, committed with the repo's Orqadence settings: the Stage skills, the Brainstorm skills, plus orqa-create-pr, which the Fix Stage runs, orqa-frontend-review, orqa-infra-review and orqa-db-review, the Extra review skills of orqa:frontend, orqa:infra and orqa:db, orqa-address-pr-comments, the Address PR comments Stage's default Delegate skill, orqa-manual-work, which says how a session files Manual work, and orqa-code-graph, which Implement loads to find its way through the worktree's code graph. Like every skill Orqadence installs, fetched Delegate skills too, its name starts with orqa-, so none shares a name with a skill of the repo's or the user's own.
+Any skill Orqadence ships and installs for a Target repo, committed with the repo's Orqadence settings: the Stage skills, the Brainstorm skills, plus orqa-create-pr, which the Fix Stage runs, orqa-frontend-review, orqa-infra-review and orqa-db-review, the Extra review skills of orqa:frontend, orqa:infra and orqa:database, orqa-address-pr-comments, the Address PR comments Stage's default Delegate skill, orqa-resolving-merge-conflicts, the Rebase Stage's, orqa-manual-work, which says how a session files Manual work, and orqa-code-graph, which Implement loads to find its way through the worktree's code graph. Like every skill Orqadence installs, fetched Delegate skills too, its name starts with orqa-, so none shares a name with a skill of the repo's or the user's own.
 
 **Personal override**:
 One setting of the Target repo's Orqadence settings that one person keeps for themselves, read over the repo's committed value on their machine only. It never leaves the machine and is never reviewed, so it covers only what does not change the text a Stage runs: which App, model and effort a Stage uses, always the three together, and the run's caps and switches. Never a skill, a Delegate pick, a label or a secret. A Ticket's label still goes over it.
@@ -133,7 +133,7 @@ _Avoid_: Agent, kind, CLI, provider
 The recorded outcome of a Stage, carrying its completion status and, as appropriate, Findings, a Verdict, an opened pull request, a Plan to approve, or a question the Stage needs the user to answer before it can go on. The Orchestrator uses it together with the session's state to decide whether the Stage can advance.
 
 **Run directory**:
-The Ticket's directory under `.orqadence-local/runs/`, holding its Stages' evidence: the result files, diffs and Debate transcripts, all flat text. It doubles as the Review's sandbox, so build scratch lands there too, and the last Fix's screenshots wait in its `pr/` folder to be attached; both are pruned when the pull request opens. Address PR comments puts its new captures of an orqa:fe Ticket's screens there again.
+The Ticket's directory under `.orqadence-local/runs/`, holding its Stages' evidence: the result files, diffs and Debate transcripts, all flat text. It doubles as the Review's sandbox, so build scratch lands there too, and the last Fix's screenshots wait in its `pr/` folder to be attached; both are pruned when the pull request opens. Address PR comments puts its new captures of an orqa:frontend Ticket's screens there again.
 _Avoid_: Logs, workdir, artifacts
 
 **Finding**:

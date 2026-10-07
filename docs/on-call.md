@@ -28,9 +28,7 @@ Nothing rings if the Mac sleeps or the Shell is closed: the Shell is what pushes
 
 1. Install the Moshi app on your phone.
 2. In Moshi, open Settings > Notifications and copy the webhook token.
-3. Give the token to Orqadence, one of three ways:
-   - `orqa init` asks "Ring your phone through Moshi when a Question waits?".
-     Say yes and paste the token.
+3. Give the token to Orqadence, one of two ways:
    - In the Shell, open `/config`, go to the On call page and type the token.
    - Set `MOSHI_WEBHOOK_TOKEN` in the environment the Shell runs in (wins over
      the saved token).
