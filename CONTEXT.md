@@ -208,8 +208,12 @@ What the Shell puts to the user when the Orchestrator cannot act alone: a Wake t
 _Avoid_: Prompt, dialog, alert, form, popup
 
 **Parked**:
-A Ticket taken out of the Pipeline to wait for the user, after a Wake that a Judgment or the user settled as park, or after its Stage, its start or a failed fetch.sh asked a question, or its Stage filed Manual work it waits on, while the user was Away. Other Tickets keep running. Parked from Rebase or Address PR comments, it keeps its pull request, still polled for its merge, and unparking takes it back to that Stage, never to the Pipeline. Parked because GitHub refused the Orchestrator's merge, it keeps its pull request the same way, and unparking has the merge tried again. Parked by the merge Question, or by its Judgment while the user was Away, it keeps its pull request too, and unparking asks again. A Research Waypoint whose session needs the user while they are Away is parked the same way, and the other research goes on. The user unparks a Ticket of the live run with /unpark-ticket, its next Question then going ahead of the others; once its run is stopped, continuing the Saved run takes it back still Parked, and naming it in /continue-ticket unparks it.
+A Ticket taken out of the Pipeline to wait for the user, after a Wake that a Judgment or the user settled as park, or after its Stage, its start or a failed fetch.sh asked a question, or its Stage filed Manual work it waits on, while the user was Away. Other Tickets keep running. Parked from Rebase or Address PR comments, it keeps its pull request, still polled for its merge, and unparking takes it back to that Stage, never to the Pipeline. Parked because GitHub refused the Orchestrator's merge, it keeps its pull request the same way, and unparking has the merge tried again. Parked by the merge Question, or by its Judgment while the user was Away, it keeps its pull request too, and unparking asks again. Parked because its pull request closed without merging, unparking has that pull request read again: reopened, it goes on; still closed, it parks again. A Research Waypoint whose session needs the user while they are Away is parked the same way, and the other research goes on. The user unparks a Ticket of the live run with /unpark-ticket, its next Question then going ahead of the others; once its run is stopped, continuing the Saved run takes it back still Parked, and naming it in /continue-ticket unparks it.
 _Avoid_: Stuck, paused, failed
+
+**Phase**:
+Where a Ticket is in its run: queued, in its Pipeline at a Stage, its pull request open, going back to its Rebase or Address PR comments, Parked, or merged. A Parked Ticket's Phase says where it was parked from, which is where unparking takes it back.
+_Avoid_: Status, state (for the Ticket's place in the run)
 
 **Manual work**:
 Something a code-editing Stage or a Brainstorm session needs done that it cannot do itself, above all anything that needs a credential, filed for the user as written steps plus, as the task needs, a wizard to run or a prompt for a separate session outside Orqadence. When the session cannot go on without it, its Ticket or Waypoint waits on a Question until the user marks it done; otherwise the work goes on, the pull request lists it, and it stays open until the user marks it done. Unlike a Question, it asks for an action, not an answer.
@@ -237,6 +241,10 @@ _Avoid_: Rebuild, graph build, reindex
 **Tools**:
 The one seam every external command (herdr, bd, gh, git) goes through; a test double stands behind it so tests never start a process.
 _Avoid_: Runner, exec, shell
+
+**Tool client**:
+The typed functions Orqadence calls one external tool through, over Tools: they build its commands and read its replies, so no other code does.
+_Avoid_: Wrapper, driver, adapter
 
 **Orchestrator**:
 The deterministic process that owns ticket state, pane placement, and stage transitions. Its only judgment calls are bounded, logged Judgments through a typed model, and it never composes text.
