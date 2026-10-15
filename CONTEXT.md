@@ -81,6 +81,10 @@ _Avoid_: Protected label, manual label
 The built-in Modifier `orqa:no-review` on one Ticket: its Review, Extra review and Debate are skipped, Implement followed by a Fix that opens the pull request, which is a No-review pull request. It is independent of a Human-merge label: a Ticket carrying both gets a pull request nothing reviews and a human merges.
 _Avoid_: Skip-review label, docs label
 
+**No-debate label**:
+The built-in Modifier `orqa:no-debate` on one Ticket: each Round's Review and Extra review run, the Debate does not. Every Finding goes to the Fix as a fix item not debated, and a stand-in Verdict saying why is written in the Debate's place, so the Round counts and the last Fix still has the Verdict history. With every Finding fixed, the Rounds stop only on a Review with no Findings or at the third Round. Beside a No-review label, the No-review label wins: nothing is reviewed.
+_Avoid_: Skip-debate label, fix-all label
+
 **Release label**:
 The label `orqa:release`, on an Epic or on any Ticket of a Ticket run, asking that the run end in a Release, when the Target repo has releases turned on. The bump comes from the Release template: by default an Epic's run raises the minor version, a Ticket run the patch version; the Breaking label makes it the major. Unlike a Ticket label it is read on the Epic, not its Tickets, and changes how the run ends, not how a Ticket runs; on GitHub only the Release's version pull request carries it.
 _Avoid_: Version bump label, release tag
@@ -110,8 +114,12 @@ A Waypoint answered by research alone, needing no user, so Orqadence runs it in 
 _Avoid_: Background Waypoint, Background Map ticket, AFK ticket (AFK is avoided for Away), unattended ticket
 
 **Pipeline**:
-The fixed sequence of Stages every Ticket passes through: Implement, Review, Debate, Fix, then a pull request, plus an Extra review when its Area label carries one.
+The fixed sequence of Stages every Ticket passes through: Implement, Review, Debate, Fix, then a pull request, plus an Extra review when its Area label carries one and the Quality Stage before the pull request when it is on.
 _Avoid_: Workflow, flow
+
+**Quality Stage**:
+A Stage that runs once per Pipeline, when switched on, after the last Round and the Extra review before the pull request and before the Fix that opens it. It judges the Ticket's diff for simplicity rather than correctness, fixes and commits in the Ticket's worktree what it rates a presumptive blocker, and leaves the rest, with why, in its result file. It is not a Round: no Verdict, no Debate, no Findings, and what it leaves never reaches the pull request. orqa:no-review skips it, as it skips the Review.
+_Avoid_: Quality Round, quality review, cleanup Stage
 
 **Extra review**:
 A second review an Area label adds to its Tickets, with its own skill, App, model and effort: the Review's instructions with the label's own review skill, such as a security review or infra's offline checks. As the label says, it runs after the Review in every Round, in the first Round only, or once after the last Round before the pull request, and its Findings join the Debate or go straight to the Fix. Like the Review it never changes the code, and a Round opened unreviewed skips it too.
@@ -133,7 +141,7 @@ _Avoid_: Agent, kind, CLI, provider
 The recorded outcome of a Stage, carrying its completion status and, as appropriate, Findings, a Verdict, an opened pull request, a Plan to approve, or a question the Stage needs the user to answer before it can go on. The Orchestrator uses it together with the session's state to decide whether the Stage can advance.
 
 **Run directory**:
-The Ticket's directory under `.orqadence-local/runs/`, holding its Stages' evidence: the result files, diffs and Debate transcripts, all flat text. It doubles as the Review's sandbox, so build scratch lands there too, and the last Fix's screenshots wait in its `pr/` folder to be attached; both are pruned when the pull request opens. Address PR comments puts its new captures of an orqa:frontend Ticket's screens there again.
+The Ticket's directory under `.orqadence-local/runs/`, holding its Stages' evidence: the result files, diffs and Debate transcripts, all flat text. It doubles as the Review's sandbox, so build scratch lands there too, and the last Fix's screenshots wait in its `pr/` folder to be attached; both are pruned when the pull request opens. Address PR comments puts its new captures of an orqa:frontend Ticket's screens there again. Its Manual work leaves it for `.orqadence-local/manual-work/<id>/` once the Ticket is concluded.
 _Avoid_: Logs, workdir, artifacts
 
 **Finding**:
@@ -185,7 +193,7 @@ The Shell's read-only page over one run, an Epic's or a Ticket run's: each Ticke
 _Avoid_: Report, recap
 
 **Brainstorm summary**:
-The Shell's page at the end of a Brainstorm, once the Waypoint that writes the Epics closes: each Epic in build order with its Tickets and their labels, then the Manual work not yet done. It offers to start the first Epic, but only once the docs pull request is merged and no other run is going; /summary @<map> opens it again.
+The Shell's page at the end of a Brainstorm, once the Waypoint that writes the Epics closes: each Epic in build order with its Tickets and their labels, then the Manual work not yet done. It offers to start the first Epic, but only once the docs pull request is merged and no other run is going (/start-epic, /start-ticket and the Tickets modal wait for that merge too); /summary @<map> opens it again.
 _Avoid_: Map summary, Brainstorm report
 
 **Wake**:
@@ -216,7 +224,7 @@ Where a Ticket is in its run: queued, in its Pipeline at a Stage, its pull reque
 _Avoid_: Status, state (for the Ticket's place in the run)
 
 **Manual work**:
-Something a code-editing Stage or a Brainstorm session needs done that it cannot do itself, above all anything that needs a credential, filed for the user as written steps plus, as the task needs, a wizard to run or a prompt for a separate session outside Orqadence. When the session cannot go on without it, its Ticket or Waypoint waits on a Question until the user marks it done; otherwise the work goes on, the pull request lists it, and it stays open until the user marks it done. Unlike a Question, it asks for an action, not an answer.
+Something a code-editing Stage or a Brainstorm session needs done that it cannot do itself, above all anything that needs a credential, filed for the user as written steps plus, as the task needs, a wizard to run or a prompt for a separate session outside Orqadence. When the session cannot go on without it, its Ticket or Waypoint waits on a Question until the user marks it done; otherwise the work goes on, the pull request lists it, and it stays open until the user marks it done. An item is filed in the Run directory and moves to `.orqadence-local/manual-work/<id>/<n>/` once its Ticket or Waypoint is closed in bd and no open issue it blocks is left; the Setup wizard's, under `setup`, once the wizard has finished. Unlike a Question, it asks for an action, not an answer.
 _Avoid_: Manual step, human task, hand-off
 
 **Away**:
