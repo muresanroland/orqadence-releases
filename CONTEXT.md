@@ -118,7 +118,7 @@ The fixed sequence of Stages every Ticket passes through: Implement, Review, Deb
 _Avoid_: Workflow, flow
 
 **Quality Stage**:
-A Stage that runs once per Pipeline, when switched on, after the last Round and the Extra review before the pull request and before the Fix that opens it. It judges the Ticket's diff for simplicity rather than correctness, fixes and commits in the Ticket's worktree what it rates a presumptive blocker, and leaves the rest, with why, in its result file. It is not a Round: no Verdict, no Debate, no Findings, and what it leaves never reaches the pull request. orqa:no-review skips it, as it skips the Review.
+A Stage that runs once per Pipeline, when switched on, after the last Round and the Extra review before the pull request and before the Fix that opens it. It judges the Ticket's diff for simplicity rather than correctness, read-only from the Run directory as the Review is, so it runs on codex too; what it rates a presumptive blocker is a fix item of the final Fix, and the rest it leaves, with why, in its result file. It is not a Round: no Verdict, no Debate, no Findings, and what it leaves never reaches the pull request. orqa:no-review skips it, as it skips the Review.
 _Avoid_: Quality Round, quality review, cleanup Stage
 
 **Extra review**:
